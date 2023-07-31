@@ -11,15 +11,22 @@ export default {
       xl: '1440px'
     },
     extend: {
+      fontFamily: {
+        'lora': ['Lora', 'serif'],
+        'inter': ['Inter', 'sans-serif'],
+        'inconsolata': ['Inconsolata', 'monospace']
+      },
       colors: {
-        brightRed: 'hsl(12, 88%, 59%)',
-        brightRedLight: 'hsl(12, 88%, 69%)',
-        brightRedSupLight: 'hsl(12, 88%, 95%)',
-        darkBlue: 'hsl(228, 39%, 23%)',
-        darkGrayishBlue: 'hsl(227, 12%, 61%)',
-        veryDarkBlue: 'hsl(233, 12%, 13%)',
-        veryPaleRed: 'hsl(13, 100%, 96%)',
-        veryLightGray: 'hsl(0, 0%, 98%)',
+        navyBlack: '#050505',
+        veryDarkGray: '#1F1F1F',
+        darkGrey: '#2D2D2D',
+        darkishGrey: '#3A3A3A',
+        lightGrey: '#757575',
+        pale: '#E9E9E9',
+        paleWhite: '#F4F4F4',
+        white: '#FFFFFF',
+        purple: '#A445ED',
+        red: '#FF5252',
     },
   },
   plugins: [],
