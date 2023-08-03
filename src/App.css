@@ -1,0 +1,12 @@
+.dark {
+  color: white;
+  background-color: black;
+}
+
+.dark .dark-text {
+  color: #fff; /* Text color for dark theme */
+}
+
+.dark .light-text {
+  color: #2D2D2D
+}
