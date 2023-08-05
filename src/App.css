@@ -10,3 +10,15 @@
 .dark .light-text {
   color: #2D2D2D
 }
+
+.moon-icon:hover path {
+  stroke: #A445ED
+}
+
+.logo:hover path {
+  stroke: #A445ED
+}
+
+input:focus {
+  outline: none;
+}

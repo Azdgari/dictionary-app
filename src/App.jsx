@@ -17,15 +17,16 @@ function App() {
   const [source, setSource] = useState("");
   const inputRef = useRef(null);
   const [error, setError] = useState(false);
-  const [font, setFont] = useState("");
-  const [hovering, setHovering] = useState(false);
+  const [font, setFont] = useState("inter");
+  const [audioBtnHovering, setAudioBtnHovering] = useState(false);
+  const [inputIsEmpty, setInputIsEmpty] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (!response.ok) {
-          setError('Word not found');
+          setError('Word not found -_-');
           return;
         }
 
@@ -51,7 +52,13 @@ function App() {
 
   function changeWord(event) {
     event.preventDefault();
+    if (inputRef.current.value === "") {
+      setInputIsEmpty(true);
+      console.log("Error")
+      return;
+    }
     setWord(inputRef.current.value);
+    setInputIsEmpty(false);
   }
 
   function playSound() {
@@ -74,17 +81,22 @@ function App() {
     console.log(font)
   }
 
+  function reset() {
+    setWord("cat");
+    setInputIsEmpty(false);
+  }
+
   return (
     <div className={`relative container mx-auto p-6 font-${font}`}>
       {/* Nav Bar/Header */}
       <section className="header">
         <div className="nav flex items-center justify-between space-x-6">
-          < Logo className="logo mr-auto" />
+          < Logo className="logo mr-auto" onClick={reset} />
 
           {/* Font Selector */}
           <div className="relative inline-flex">
             <FontSelector />
-            <select id="font" className=" hover:text-purple border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+            <select id="font" className=" hover:text-purple border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-purple focus:outline-none appearance-none"
               onChange={changeFont}>
               <option value="inter">Sans Serif</option>
               <option value="lora">Serif</option>
@@ -94,24 +106,26 @@ function App() {
 
           {/* Theme Switch */}
           <button className="theme-switch-group" onClick={changeTheme}>
-            < DarkThemeIcon className="dark-theme-icon" />
+
+            < DarkThemeIcon className="dark-theme-icon moon-icon" />
           </button>
         </div>
 
         {/* Search Bar */}
-        <form onSubmit={changeWord} className="search p-3 px-6 rounded-full flex items-center justify-between bg-pale my-6 gap-8 light-text">
+        <form onSubmit={changeWord} className="search p-3 px-6 rounded-full flex items-center justify-between bg-pale mt-6 mb-2 gap-8 light-text border hover:border-purple">
           <input id="search" ref={inputRef} type="text" placeholder="search" className="search-input bg-pale grow" />
           <button className="search-button" type="submit">
             <MagnifyingGlass className="search-icon" />
           </button>
         </form>
+        {inputIsEmpty && <div className="error-message text-left text-1xl text-red  absolute">{"Oops, can't be empty..."}</div>}
       </section >
 
       {/* Main Content */}
       < section className="contents" >
         {
           error ? (
-            <div className="error-message text-center text-3xl font-bold text-lightGrey" > {error}</div>
+            <div className="error-message text-center text-3xl font-bold text-lightGrey mt-10" > {error}</div>
           ) : (
             <>
               <div className="result-word-container flex items-center justify-between my-7">
@@ -122,10 +136,10 @@ function App() {
 
                 {/* Audio Button */}
                 <button className="play-sound"
-                  onMouseEnter={() => setHovering(true)}
-                  onMouseLeave={() => setHovering(false)}
+                  onMouseEnter={() => setAudioBtnHovering(true)}
+                  onMouseLeave={() => setAudioBtnHovering(false)}
                   onClick={playSound}>
-                  {hovering ? <PlayButtonHover className="play-icon cursor-pointer rounded-full" /> : <PlayButtonDefault className="play-icon cursor-pointer rounded-full" />}
+                  {audioBtnHovering ? <PlayButtonHover className="play-icon cursor-pointer rounded-full" /> : <PlayButtonDefault className="play-icon cursor-pointer rounded-full" />}
                 </button>
               </div>
               <div className="meaning-container">
@@ -163,8 +177,8 @@ function App() {
               {/* Footer */}
               <section className="footer" >
                 < div className="sources-title font-regular text-lightGrey mb-1 underline decoration-solid decoration-lightGrey decoration-2">Source</div>
-                <div className="sources font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text">{source}
-                </div>
+                <a href={source} className="sources font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text hover:decoration-purple hover:text-purple">{source}
+                </a>
               </section >
 
             </>
