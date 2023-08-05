@@ -14,8 +14,9 @@ function App() {
   const [phonetics, setPhonetics] = useState([]);
   const [synonyms, setSynonyms] = useState([]);
   const [source, setSource] = useState("");
-  const inputRef = useRef(null)
+  const inputRef = useRef(null);
   const [error, setError] = useState(false);
+  const [font, setFont] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,10 +52,6 @@ function App() {
     setWord(inputRef.current.value);
   }
 
-  // function changeWordHandler(newWord) {
-  //   setWord(newWord);
-  // }
-
   function playSound() {
     const audio = new Audio(phonetics[0].audio);
     audio.play();
@@ -67,20 +64,33 @@ function App() {
     definitionsList.forEach(definition => {
       definition.classList.toggle("dark-text");
     });
-
   }
 
+  function changeFont() {
+    const selectedValue = event.target.value;
+    setFont(selectedValue);
+    console.log(font)
+  }
 
   return (
-    <div className="relative container mx-auto p-6">
+    <div className={`relative container mx-auto p-6 font-${font}`}>
       {/* Nav Bar/Header */}
       <section className="header">
         <div className="nav flex items-center justify-between space-x-6">
           < Logo className="logo mr-auto" />
-          <div className="font-selector flex items-center">
-            <div className="font-name hover:text-purple cursor-pointer">Sans Serif</div>
-            < FontSelector className="ml-3" />
+
+          {/* Font Selector */}
+          <div className="relative inline-flex">
+            <FontSelector />
+            <select id="font" className=" hover:text-purple border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
+              onChange={changeFont}>
+              <option value="inter">Inter</option>
+              <option value="lora">Lora</option>
+              <option value="inconsolata">Inconsolata</option>
+            </select>
           </div>
+
+          {/* Theme Switch */}
           <button className="theme-switch-group" onClick={changeTheme}>
             < DarkThemeIcon className="dark-theme-icon" />
           </button>
@@ -93,68 +103,94 @@ function App() {
             <MagnifyingGlass className="search-icon" />
           </button>
         </form>
-      </section>
+      </section >
 
       {/* Main Content */}
-      <section className="contents">
-        {error ? (
-          <div className="error-message text-center font-inter text-3xl font-bold text-lightGrey">{error}</div>
-        ) : (
-          <>
-            <div className="result-word-container flex items-center justify-between my-7">
-              <div className="result-word flex-col space-y-2">
-                <div className="word font-bold text-4xl font-lora">{word}</div>
-                <div className="pronunciation font-inter text-purple text-2xl">{phonetics.length > 0 ? phonetics[0].text : ''}</div>
+      < section className="contents" >
+        {
+          error ? (
+            <div className="error-message text-center text-3xl font-bold text-lightGrey" > {error}</div>
+          ) : (
+            <>
+              <div className="result-word-container flex items-center justify-between my-7">
+                <div className="result-word flex-col space-y-2">
+                  <div className={`word font-bold text-4xl font-${font}`}>{word}</div>
+                  <div className="pronunciation text-purple text-2xl">{phonetics.length > 0 ? phonetics[0].text : ''}</div>
+                </div>
+
+                {/* Audio Button */}
+                <button className="play-sound" onClick={playSound}>
+                  < PlayButton className="play-icon cursor-pointer rounded-full" />
+                </button>
               </div>
+              <div className="meaning-container">
 
-              {/* Audio Button */}
-              <button className="play-sound" onClick={playSound}>
-                < PlayButton className="play-icon cursor-pointer rounded-full" />
-              </button>
-            </div>
-            <div className="meaning-container">
-
-              {/* Part of Speech */}
-              {meanings.map((meaningGroup, index) => (<div className="holder" key={index}>
-                <div className="part-of-speech-container flex mb-5" >
-                  <div className="part-of-speech font-inter text-black text-lg mb-2 italic font-bold">{meaningGroup.partOfSpeech}
+                {/* Part of Speech */}
+                {meanings.map((meaningGroup, index) => (<div className="holder" key={index}>
+                  <div className="part-of-speech-container flex mb-5" >
+                    <div className="part-of-speech text-black text-lg mb-2 italic font-bold dark-text">{meaningGroup.partOfSpeech}
+                    </div>
+                    <div className="line border-t-2 w-full mt-3 ml-3"></div>
                   </div>
-                  <div className="line border-t-2 w-full mt-3 ml-3"></div>
-                </div>
 
-                {/* Meaning */}
-                <div className="meaning-content">
-                  <div className="meaning-header font-inter font-regular text-lightGrey mb-3">Meaning</div>
-                  <ul className="meanings list-disc font-inter font-regular text-lg leading-7 mb-5 ml-5 text-darkGrey" id="definitions">
-                    {meaningGroup.definitions.slice(0, 5).map((definition, index) => (
-                      <li className="def mb-3 dark-text" key={index}>{definition.definition}</li>
-                    ))}
-                  </ul>
+                  {/* Meaning */}
+                  <div className="meaning-content">
+                    <div className="meaning-header font-regular text-lightGrey mb-3">Meaning</div>
+                    <ul className="meanings list-disc font-regular text-lg leading-7 mb-5 ml-5 text-darkGrey" id="definitions">
+                      {meaningGroup.definitions.slice(0, 5).map((definition, index) => (
+                        <li className="def mb-3 dark-text" key={index}>{definition.definition}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                ))}
+
+                {/* Synonyms */}
+                <div className="synonyms-container flex items-left gap-7 py-3">
+                  <div className="synonyms-header font-regular text-lightGrey mb-3">Synonyms</div>
+                  <div className="synonyms text-purple font-bold">
+                    {synonyms.length > 0 ? synonyms.slice(0, 5).join(', ') : ''}
+
+                  </div>
                 </div>
               </div>
-              ))}
 
-              {/* Synonyms */}
-              <div className="synonyms-container flex items-left gap-7 py-3">
-                <div className="synonyms-header font-inter font-regular text-lightGrey mb-3">Synonyms</div>
-                <div className="synonyms font-inter text-purple font-bold">
-                  {synonyms.length > 0 ? synonyms.slice(0, 5).join(', ') : ''}
-
+              {/* Footer */}
+              <section className="footer" >
+                < div className="sources-title font-regular text-lightGrey mb-1 underline decoration-solid decoration-lightGrey decoration-2">Source</div>
+                <div className="sources font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text">{source}
                 </div>
-              </div>
-            </div>
+              </section >
 
-            {/* Footer */}
-            <section className="footer" >
-              < div className="sources-title font-inter font-regular text-lightGrey mb-1 underline decoration-solid decoration-lightGrey decoration-2">Source</div>
-              <div className="sources font-inter font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text">{source}
-              </div>
-            </section >
+            </>
+          )
+        }
+      </ section>
 
-          </>
-        )}
-      </section >
-      {/* {meanings[0]?.synonyms?.map((synonym, index) => (
+    </div >
+  )
+}
+
+export default App
+
+
+
+// Old elements for reference
+
+// Original font selector element
+{/* <div className="font-selector relative inline-flex items-center">
+            <label htmlFor="fonts" className="flex items-center cursor-pointer">
+              <select name="" id="fonts" className="font-name hover:text-purple cursor-pointer appearance-none h-10 pl-5 pr-5 rounded-full">
+                <option value="sans-serif">Sans Serif</option>
+                <option value="serif">Serif</option>
+                <option value="monospace">Mono</option>
+              </select>
+              < FontSelector className="ml-3 cursor-pointer" onClick={() => handleFontSelectorClick} />
+            </label>
+          </div> */}
+
+// Original meanings map function
+{/* {meanings[0]?.synonyms?.map((synonym, index) => (
                     <span
                       key={index}
                       className="synonyms font-inter text-purple font-bold"
@@ -163,8 +199,11 @@ function App() {
                       {synonym}
                     </span>
                   ))} */}
-    </div >
-  )
-}
 
-export default App
+
+  // function changeWordHandler(newWord) {
+  //   setWord(newWord);
+  // }
+
+  // Original font dropdown SVG element
+  // <svg xmlns="http://www.w3.org/2000/svg" position="absolute" width="14" margin="0" height="8" viewBox="0 0 14 8"><path fill="none" stroke="#A445ED" stroke-width="1.5" d="m1 1 6 6 6-6"/></svg>
