@@ -3,7 +3,8 @@ import './App.css'
 import { ReactComponent as Logo } from "./assets/logo.svg";
 import { ReactComponent as DarkThemeIcon } from "./assets/icon-moon.svg";
 import { ReactComponent as FontSelector } from "./assets/icon-arrow-down.svg";
-import { ReactComponent as PlayButton } from "./assets/icon-play.svg"
+import { ReactComponent as PlayButtonHover } from "./assets/icon-play-hover.svg"
+import { ReactComponent as PlayButtonDefault } from "./assets/icon-play-default.svg"
 import { ReactComponent as MagnifyingGlass } from "./assets/iconoir_search.svg";
 
 
@@ -17,6 +18,7 @@ function App() {
   const inputRef = useRef(null);
   const [error, setError] = useState(false);
   const [font, setFont] = useState("");
+  const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,9 +86,9 @@ function App() {
             <FontSelector />
             <select id="font" className=" hover:text-purple border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
               onChange={changeFont}>
-              <option value="inter">Inter</option>
-              <option value="lora">Lora</option>
-              <option value="inconsolata">Inconsolata</option>
+              <option value="inter">Sans Serif</option>
+              <option value="lora">Serif</option>
+              <option value="inconsolata">Mono</option>
             </select>
           </div>
 
@@ -98,7 +100,7 @@ function App() {
 
         {/* Search Bar */}
         <form onSubmit={changeWord} className="search p-3 px-6 rounded-full flex items-center justify-between bg-pale my-6 gap-8 light-text">
-          <input ref={inputRef} type="text" placeholder="search" className="search-input bg-pale grow" />
+          <input id="search" ref={inputRef} type="text" placeholder="search" className="search-input bg-pale grow" />
           <button className="search-button" type="submit">
             <MagnifyingGlass className="search-icon" />
           </button>
@@ -119,8 +121,11 @@ function App() {
                 </div>
 
                 {/* Audio Button */}
-                <button className="play-sound" onClick={playSound}>
-                  < PlayButton className="play-icon cursor-pointer rounded-full" />
+                <button className="play-sound"
+                  onMouseEnter={() => setHovering(true)}
+                  onMouseLeave={() => setHovering(false)}
+                  onClick={playSound}>
+                  {hovering ? <PlayButtonHover className="play-icon cursor-pointer rounded-full" /> : <PlayButtonDefault className="play-icon cursor-pointer rounded-full" />}
                 </button>
               </div>
               <div className="meaning-container">
