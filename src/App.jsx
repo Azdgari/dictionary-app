@@ -3,8 +3,8 @@ import './App.css'
 import { ReactComponent as Logo } from "./assets/logo.svg";
 import { ReactComponent as DarkThemeIcon } from "./assets/icon-moon.svg";
 import { ReactComponent as FontSelector } from "./assets/icon-arrow-down.svg";
-import { ReactComponent as PlayButtonHover } from "./assets/icon-play-hover.svg"
-import { ReactComponent as PlayButtonDefault } from "./assets/icon-play-default.svg"
+import { ReactComponent as PlayButtonHover } from "./assets/icon-play-hover.svg";
+import { ReactComponent as PlayButtonDefault } from "./assets/icon-play-default.svg";
 import { ReactComponent as MagnifyingGlass } from "./assets/iconoir_search.svg";
 
 function App() {
