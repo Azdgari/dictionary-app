@@ -107,7 +107,6 @@ function App() {
 
           {/* Theme Switch */}
           <button className="theme-switch-group" onClick={changeTheme}>
-
             < DarkThemeIcon className="dark-theme-icon moon-icon" />
           </button>
         </div>
