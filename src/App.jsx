@@ -7,7 +7,6 @@ import { ReactComponent as PlayButtonHover } from "./assets/icon-play-hover.svg"
 import { ReactComponent as PlayButtonDefault } from "./assets/icon-play-default.svg"
 import { ReactComponent as MagnifyingGlass } from "./assets/iconoir_search.svg";
 
-
 function App() {
 
   const [word, setWord] = useState("cat");
@@ -15,11 +14,12 @@ function App() {
   const [phonetics, setPhonetics] = useState([]);
   const [synonyms, setSynonyms] = useState([]);
   const [source, setSource] = useState("");
-  const inputRef = useRef(null);
   const [error, setError] = useState(false);
   const [font, setFont] = useState("inter");
   const [audioBtnHovering, setAudioBtnHovering] = useState(false);
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
+
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,6 +96,7 @@ function App() {
           {/* Font Selector */}
           <div className="relative inline-flex">
             <FontSelector />
+
             <select id="font" className=" hover:text-purple border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-purple focus:outline-none appearance-none"
               onChange={changeFont}>
               <option value="inter">Sans Serif</option>
