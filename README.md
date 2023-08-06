@@ -4,8 +4,8 @@ A dictionary app built with React that allows users to search for word definitio
 
 ## Table of Contents
 - [Features](#features)
-- [Demo](#demo)
 - [Live Link]($live-link)
+- [Demo](#demo)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Technologies Used](#technologies-used)
@@ -18,13 +18,13 @@ A dictionary app built with React that allows users to search for word definitio
 - Choose from different font styles
 - Error handling for word not found and API errors
 
-## Demo
-
-![App Demo](/src/demo-screenshots/dict-screenshot-2.png)
-
 ## Live Link
 
 - Live Site URL: [https://azdgari.github.io/dictionary-app/](https://azdgari.github.io/dictionary-app/)
+
+## Demo
+
+![App Demo](/src/demo-screenshots/dict-screenshot-2.png)
 
 ## Installation
 
