@@ -191,38 +191,3 @@ function App() {
 }
 
 export default App
-
-
-
-// Old elements for reference
-
-// Original font selector element
-{/* <div className="font-selector relative inline-flex items-center">
-            <label htmlFor="fonts" className="flex items-center cursor-pointer">
-              <select name="" id="fonts" className="font-name hover:text-purple cursor-pointer appearance-none h-10 pl-5 pr-5 rounded-full">
-                <option value="sans-serif">Sans Serif</option>
-                <option value="serif">Serif</option>
-                <option value="monospace">Mono</option>
-              </select>
-              < FontSelector className="ml-3 cursor-pointer" onClick={() => handleFontSelectorClick} />
-            </label>
-          </div> */}
-
-// Original meanings map function
-{/* {meanings[0]?.synonyms?.map((synonym, index) => (
-                    <span
-                      key={index}
-                      className="synonyms font-inter text-purple font-bold"
-                      onClick={() => changeWordHandler(synonym)}
-                    >
-                      {synonym}
-                    </span>
-                  ))} */}
-
-
-  // function changeWordHandler(newWord) {
-  //   setWord(newWord);
-  // }
-
-  // Original font dropdown SVG element
-  // <svg xmlns="http://www.w3.org/2000/svg" position="absolute" width="14" margin="0" height="8" viewBox="0 0 14 8"><path fill="none" stroke="#A445ED" stroke-width="1.5" d="m1 1 6 6 6-6"/></svg>
