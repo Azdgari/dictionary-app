@@ -11,7 +11,7 @@ export default defineConfig(({ command }) => {
   }
 
   if (command !== 'serve') {
-    config.base = '/dictionary-app/'
+    config.base = '/dynamic-dictionary/'
   }
 
   return config
