@@ -22,3 +22,15 @@
 input:focus {
   outline: none;
 }
+
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-lora {
+  font-family: 'Lora', serif;
+}
+
+.font-inconsolata {
+  font-family: 'Inconsolata', monospace;
+}

@@ -9,24 +9,37 @@ import { ReactComponent as MagnifyingGlass } from "./assets/iconoir_search.svg";
 
 function App() {
 
-  const [word, setWord] = useState("cat");
-  const [meanings, setMeanings] = useState([]);
-  const [phonetics, setPhonetics] = useState([]);
-  const [synonyms, setSynonyms] = useState([]);
-  const [source, setSource] = useState("");
-  const [error, setError] = useState(false);
-  const [font, setFont] = useState("inter");
+  const [word, setWord] = useState("dictionary");
+  const [data, setData] = useState({
+    meanings: [],
+    phonetics: [],
+    synonyms: [],
+    source: "",
+    error: false
+  });
+  const [font, setFont] = useState("sans-serif");
   const [audioBtnHovering, setAudioBtnHovering] = useState(false);
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
 
   const inputRef = useRef(null);
 
   useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkTheme) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [isDarkTheme]);
+
+  useEffect(() => {
+    if (word === "") return;
     const fetchData = async () => {
       try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (!response.ok) {
-          setError('Word not found -_-');
+          setData(prevData => ({ ...prevData, error: 'Word not found -_-' }));
           return;
         }
 
@@ -37,14 +50,16 @@ function App() {
         const synonyms = data[0].meanings[0].synonyms;
         const source = data[0].sourceUrls[0];
 
-        setError(null);
+        setData({
+          meanings,
+          phonetics,
+          synonyms,
+          source,
+          error: null
+        });
         setWord(searchedWord);
-        setMeanings(meanings);
-        setPhonetics(phonetics);
-        setSynonyms(synonyms);
-        setSource(source);
       } catch (error) {
-        setError('An error occured while fetching data');
+        setData(prevData => ({ ...prevData, error: 'An error occured while fetching data' }));
       }
     };
     fetchData();
@@ -62,27 +77,22 @@ function App() {
   }
 
   function playSound() {
-    const audio = new Audio(phonetics[0].audio);
+    const audio = new Audio(data.phonetics[0].audio);
     audio.play();
   }
 
   function changeTheme() {
-    const definitionsList = document.querySelectorAll(".definition");
-    const root = document.documentElement;
-    root.classList.toggle("dark");
-    definitionsList.forEach(definition => {
-      definition.classList.toggle("dark-text");
-    });
+    setIsDarkTheme(!isDarkTheme);
   }
 
-  function changeFont() {
+  function changeFont(event) {
     const selectedValue = event.target.value;
     setFont(selectedValue);
     console.log(font)
   }
 
   function reset() {
-    setWord("cat");
+    setWord("dictionary");
     setInputIsEmpty(false);
   }
 
@@ -124,14 +134,14 @@ function App() {
       {/* Main Content */}
       < section className="contents" >
         {
-          error ? (
-            <div className="error-message text-center text-3xl font-bold text-lightGrey mt-10" > {error}</div>
+          data.error ? (
+            <div className="error-message text-center text-3xl font-bold text-lightGrey mt-10" > {data.error}</div>
           ) : (
             <>
               <div className="result-word-container flex items-center justify-between my-7">
                 <div className="result-word flex-col space-y-2">
                   <div className={`word font-bold text-4xl font-${font}`}>{word}</div>
-                  <div className="pronunciation text-purple text-2xl">{phonetics.length > 0 ? phonetics[0].text : ''}</div>
+                  <div className="pronunciation text-purple text-2xl">{data.phonetics.length > 0 ? data.phonetics[0].text : ''}</div>
                 </div>
 
                 {/* Audio Button */}
@@ -145,7 +155,7 @@ function App() {
               <div className="meaning-container">
 
                 {/* Part of Speech */}
-                {meanings.map((meaningGroup, index) => (<div className="holder" key={index}>
+                {data.meanings.map((meaningGroup, index) => (<div className="holder" key={index}>
                   <div className="part-of-speech-container flex mb-5" >
                     <div className="part-of-speech text-black text-lg mb-2 italic font-bold dark-text">{meaningGroup.partOfSpeech}
                     </div>
@@ -168,7 +178,7 @@ function App() {
                 <div className="synonyms-container flex items-left gap-7 py-3">
                   <div className="synonyms-header font-regular text-lightGrey mb-3">Synonyms</div>
                   <div className="synonyms text-purple font-bold">
-                    {synonyms.length > 0 ? synonyms.slice(0, 5).join(', ') : ''}
+                    {data.synonyms.length > 0 ? data.synonyms.slice(0, 5).join(', ') : ''}
 
                   </div>
                 </div>
@@ -177,7 +187,7 @@ function App() {
               {/* Footer */}
               <section className="footer" >
                 < div className="sources-title font-regular text-lightGrey mb-1 underline decoration-solid decoration-lightGrey decoration-2">Source</div>
-                <a href={source} className="sources font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text hover:decoration-purple hover:text-purple">{source}
+                <a href={data.source} className="sources font-regular text-navyBlack underline decoration-solid decoration-darkGrey dark-text hover:decoration-purple hover:text-purple">{data.source}
                 </a>
               </section >
 
