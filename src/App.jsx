@@ -37,41 +37,34 @@ function App() {
   }, [isDarkTheme]);
 
   useEffect(() => {
-    setIsLoading(true);
-    if (word === "") return;
+    setIsLoading(true)
+    if (word === "") 
+    {setIsLoading(false);
+      return;
+    }
     const fetchData = async () => {
       try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (!response.ok) {
-          if (response.status === 404) {
-            setData(prevData => ({ ...prevData, error: 'Word not found' }))
-           } else {
-              setData(prevData => ({ ...prevData, error: 'An unexpected error occured' }));
-            }
-         setIsLoading(false);
-          return;
+          throw new Error('Word not found')
+          
         }
 
-        const data = await response.json();
-        const searchedWord = data[0].word;
-        const meanings = data[0].meanings;
-        const phonetics = data[0].phonetics;
-        const synonyms = data[0].meanings[0].synonyms;
-        const source = data[0].sourceUrls[0];
+        const newData = await response.json();
+      setData({
+        meanings: newData[0].meanings,
+        phonetics: newData[0].phonetics,
+        synonyms: newData[0].meanings[0].synonyms,
+        source: newData[0].sourceUrls[0],
+        error: null
+      });
 
-        setData({
-          meanings,
-          phonetics,
-          synonyms,
-          source,
-          error: null
-        });
         setShowWelcomeScreen(false);
-        setWord(searchedWord);
-        setIsLoading(false);
+
       } catch (error) {
-        setData(prevData => ({ ...prevData, error: 'An error occured while fetching data' }));
+        setData(prevData => ({ ...prevData, error: error.message }));
         setShowWelcomeScreen(false);
+      } finally {
         setIsLoading(false);
       }
     };
@@ -80,11 +73,14 @@ function App() {
 
   function changeWord(event) {
     event.preventDefault();
-    if (inputRef.current.value === "") {
+    const newWord = inputRef.current.value;
+    if (newWord === "") {
       setInputIsEmpty(true);
       return;
     }
-    setWord(inputRef.current.value);
+    setInputIsEmpty(false);
+    setIsLoading(true);
+    setWord(newWord);
   }
 
   function playSound() {
