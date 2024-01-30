@@ -145,18 +145,19 @@ function App() {
 
       {/* Main Content */}
       < section className="contents" >
-        {showWelcomeScreen ? (
+        {
+        isLoading ? (
+          <Box sx={{ width: '75%', marginTop: '15rem', marginRight: 'auto', marginLeft: 'auto' }}>
+          <LinearProgress />
+        </Box>
+        ) :
+        showWelcomeScreen ? (
           <div className="welcome-screen">
             <div className="welcome-text text-center text-3xl font-bold text-lightGrey mt-10" > Welcome to the Dictionary</div>
             <div className="welcome-text text-center text-3xl font-bold text-lightGrey mt-10" > Search for a word to get started</div>
           </div>
          
-        ) :  isLoading ? (
-          <Box sx={{ width: '75%', marginTop: '15rem', marginRight: 'auto', marginLeft: 'auto' }}>
-          <LinearProgress />
-        </Box>
         ) : (
-        
           data.error ? (
             <div className="error-message text-center text-3xl font-bold text-lightGrey mt-10" > {data.error}</div>
           ) : (
