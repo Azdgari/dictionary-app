@@ -6,10 +6,12 @@ import { ReactComponent as FontSelector } from "./assets/icon-arrow-down.svg";
 import { ReactComponent as PlayButtonHover } from "./assets/icon-play-hover.svg";
 import { ReactComponent as PlayButtonDefault } from "./assets/icon-play-default.svg";
 import { ReactComponent as MagnifyingGlass } from "./assets/iconoir_search.svg";
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 
 function App() {
 
-  const [word, setWord] = useState("dictionary");
+  const [word, setWord] = useState("");
   const [data, setData] = useState({
     meanings: [],
     phonetics: [],
@@ -21,7 +23,8 @@ function App() {
   const [audioBtnHovering, setAudioBtnHovering] = useState(false);
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -34,12 +37,14 @@ function App() {
   }, [isDarkTheme]);
 
   useEffect(() => {
+    setIsLoading(true);
     if (word === "") return;
     const fetchData = async () => {
       try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (!response.ok) {
-          setData(prevData => ({ ...prevData, error: 'Word not found -_-' }));
+          setData(prevData => ({ ...prevData, error: 'Word not found' }));
+          setIsLoading(false);
           return;
         }
 
@@ -57,9 +62,13 @@ function App() {
           source,
           error: null
         });
+        setShowWelcomeScreen(false);
         setWord(searchedWord);
+        setIsLoading(false);
       } catch (error) {
         setData(prevData => ({ ...prevData, error: 'An error occured while fetching data' }));
+        setShowWelcomeScreen(false);
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -92,8 +101,13 @@ function App() {
   }
 
   function reset() {
-    setWord("dictionary");
+    setWord("");
     setInputIsEmpty(false);
+    setShowWelcomeScreen(true);
+    setIsLoading(false);
+    inputRef.current.value = "";
+
+   
   }
 
   return (
@@ -133,7 +147,18 @@ function App() {
 
       {/* Main Content */}
       < section className="contents" >
-        {
+        {showWelcomeScreen ? (
+          <div className="welcome-screen">
+            <div className="welcome-text text-center text-3xl font-bold text-lightGrey mt-10" > Welcome to the Dictionary</div>
+            <div className="welcome-text text-center text-3xl font-bold text-lightGrey mt-10" > Search for a word to get started</div>
+          </div>
+         
+        ) :  isLoading ? (
+          <Box sx={{ width: '75%', marginTop: '15rem', marginRight: 'auto', marginLeft: 'auto' }}>
+          <LinearProgress />
+        </Box>
+        ) : (
+        
           data.error ? (
             <div className="error-message text-center text-3xl font-bold text-lightGrey mt-10" > {data.error}</div>
           ) : (
@@ -193,7 +218,7 @@ function App() {
 
             </>
           )
-        }
+        )}
       </ section>
 
     </div >
