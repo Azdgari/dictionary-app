@@ -43,8 +43,12 @@ function App() {
       try {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         if (!response.ok) {
-          setData(prevData => ({ ...prevData, error: 'Word not found' }));
-          setIsLoading(false);
+          if (response.status === 404) {
+            setData(prevData => ({ ...prevData, error: 'Word not found' }))
+           } else {
+              setData(prevData => ({ ...prevData, error: 'An unexpected error occured' }));
+            }
+         setIsLoading(false);
           return;
         }
 
@@ -78,11 +82,9 @@ function App() {
     event.preventDefault();
     if (inputRef.current.value === "") {
       setInputIsEmpty(true);
-      console.log("Error")
       return;
     }
     setWord(inputRef.current.value);
-    setInputIsEmpty(false);
   }
 
   function playSound() {
